@@ -1,0 +1,1 @@
+import{N as a}from"./NavBottom-BtxUkUh8.js";import{c as o,a as t,b as r,o as s}from"./index-BmKkwWYN.js";const p={__name:"RegisterPage",setup(l){return(n,e)=>(s(),o("div",null,[e[0]||(e[0]=t("div",null,[t("p",{class:"text-2xl"},"RegisterPage.vue")],-1)),r(a)]))}};export{p as default};
