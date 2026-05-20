@@ -1,0 +1,1 @@
+import{N as a}from"./NavBottom-CzuoKhhy.js";import{c as o,a as t,b as r,o as s}from"./index-CEGrihFr.js";const m={__name:"ProductDetailPage",setup(l){return(c,e)=>(s(),o("div",null,[e[0]||(e[0]=t("div",null,[t("p",{class:"text-2xl"},"ProductDetailPage.vue")],-1)),r(a)]))}};export{m as default};
