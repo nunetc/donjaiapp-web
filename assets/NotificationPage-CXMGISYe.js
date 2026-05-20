@@ -1,1 +1,0 @@
-import{N as a}from"./NavBottom-BtxUkUh8.js";import{c as o,a as t,b as r,o as s}from"./index-BmKkwWYN.js";const m={__name:"NotificationPage",setup(i){return(n,e)=>(s(),o("div",null,[e[0]||(e[0]=t("div",null,[t("p",{class:"text-2xl"},"NotificationPage.vue")],-1)),r(a)]))}};export{m as default};
