@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กำลังพาเข้าสู่แอป...</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f9fafb; color: #374151; }
+        .loader { border: 4px solid #e5e7eb; border-top: 4px solid #3b82f6; border-radius: 50%; width: 48px; height: 48px; animation: spin 1s linear infinite; margin-bottom: 24px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <p>กำลังพาคุณไปยังแอปพลิเคชัน...</p>
+
+    <script>
+        // *** สำคัญ: ต้องนำลิงก์ Play Store มาทำ URL Encoding ก่อนนำไปใส่ใน Intent ***
+        // ตัวอย่างลิงก์ Play Store ที่เข้ารหัสแล้ว: https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.yourcompany.yourapp
+        
+        const config = {
+            iosScheme: "donjai://path/to/open", 
+            iosStoreUrl: "https://apps.apple.com/th/app/id6739621358",
+            
+            // เพิ่ม S.browser_fallback_url เข้าไปใน Intent เพื่อให้ Android จัดการ Fallback เอง
+            androidIntent: "intent://open#Intent;scheme=donjai;package=th.co.donjai.donjai_partner_app;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dth.co.donjai.donjai_partner_app;end",
+            
+            webUrl: "https://donjaiapp-web.aspiron.co.th/"
+        };
+
+        let isAppOpened = false;
+
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                isAppOpened = true;
+            }
+        });
+
+        // เพิ่ม Event 'pagehide' เพื่อช่วยดักจับใน iOS บางกรณี
+        window.addEventListener('pagehide', function() {
+            isAppOpened = true;
+        });
+
+        function detectOS() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) return 'iOS';
+            if (/android/i.test(userAgent)) return 'Android';
+            return 'Web';
+        }
+
+        function handleRedirect() {
+            const os = detectOS();
+
+            if (os === 'Web') {
+                window.location.replace(config.webUrl);
+                return;
+            }
+
+            if (os === 'Android') {
+                // สำหรับ Android ยิง Intent ไปเลย ไม่ต้องใช้ setTimeout แล้ว
+                // หากไม่มีแอป WebView ของ LINE จะพาไปที่ S.browser_fallback_url เอง
+                window.location.href = config.androidIntent;
+            } 
+            else if (os === 'iOS') {
+                // iOS ยังคงไม่มีระบบ Fallback ในตัวที่สมบูรณ์แบบบน Custom Scheme 
+                // จึงยังต้องใช้ setTimeout อยู่ แต่เพิ่มเวลาเผื่อให้โหลดนิดนึง
+                window.location.href = config.iosScheme;
+                
+                setTimeout(() => {
+                    if (!isAppOpened) {
+                        window.location.replace(config.iosStoreUrl);
+                    }
+                }, 3000); 
+            }
+        }
+
+        window.onload = handleRedirect;
+    </script>
+</body>
+</html>
